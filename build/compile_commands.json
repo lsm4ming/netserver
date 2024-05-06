@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/cpp/netserver/build/base01",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/base01-bin.dir/main.cpp.o -c /home/cpp/netserver/base01/main.cpp",
+  "file": "/home/cpp/netserver/base01/main.cpp"
+},
+{
+  "directory": "/home/cpp/netserver/build/base02",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/base02-clinet-bin.dir/client.cpp.o -c /home/cpp/netserver/base02/client.cpp",
+  "file": "/home/cpp/netserver/base02/client.cpp"
+},
+{
+  "directory": "/home/cpp/netserver/build/base02",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/base02-server-bin.dir/server.cpp.o -c /home/cpp/netserver/base02/server.cpp",
+  "file": "/home/cpp/netserver/base02/server.cpp"
+}
+]

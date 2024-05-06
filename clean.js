@@ -5,6 +5,7 @@ let delCount = 0;
 
 const ignoreFiles = new Set(['.git', '.vscode', '.gitignore']);
 const removeFileRule = ['cmake_install.cmake', 'CMakeCache.txt', 'CMakeFiles', 'Makefile'];
+const removeFileSuffix = ['-bin']
 
 const clean = (dirPath) => {
     // 读取目录中的所有文件和子目录
@@ -27,13 +28,23 @@ const clean = (dirPath) => {
             delFunc = fs.rmdirSync;
         }
 
+        const deleteFile = () => {
+            console.log(`需要删除${fullPath}`)
+            delCount++;
+            delFunc(fullPath, { recursive: true });
+        }
+
         // 是否符合删除规则
         removeFileRule.forEach(rule => {
             const regex = new RegExp(rule)
             if (regex.test(file)) {
-                console.log(`需要删除${fullPath}`)
-                delCount++;
-                delFunc(fullPath, { recursive: true });
+                deleteFile()
+            }
+        })
+
+        removeFileSuffix.forEach(suffix => {
+            if (file.endsWith(suffix)) {
+                deleteFile()
             }
         })
     });

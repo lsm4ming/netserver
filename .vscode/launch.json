@@ -8,7 +8,7 @@
             "name": "base01",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/base01/base01-main", // 修改为你的可执行文件路径
+            "program": "${workspaceFolder}/base01/base01-bin", // 修改为你的可执行文件路径
             "args": [], // 传递给可执行文件的参数
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

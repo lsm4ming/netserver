@@ -1,1 +1,1 @@
-add_executable(base01-main main.cpp)
+add_executable(base01-bin main.cpp)

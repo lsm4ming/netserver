@@ -13,12 +13,14 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "dependsOn":[
+                "cmake",
+            ]
         },
         {
 			"label": "Build",    // launch.json里面的preLaunchTask
 			"dependsOn":[
-                "cmake",
 				"build"
 			]
 		}
