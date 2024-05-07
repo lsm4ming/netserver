@@ -4,7 +4,7 @@ const path = require('path');
 let delCount = 0;
 
 const ignoreFiles = new Set(['.git', '.vscode', '.gitignore']);
-const removeFileRule = ['cmake_install.cmake', 'CMakeCache.txt', 'CMakeFiles', 'Makefile'];
+const removeFileRule = ['cmake_install.cmake', 'CMakeCache.txt', 'CMakeFiles', 'Makefile', 'build'];
 const removeFileSuffix = ['-bin']
 
 const clean = (dirPath) => {
