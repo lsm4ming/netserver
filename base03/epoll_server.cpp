@@ -22,7 +22,7 @@ void setnonblocking(int fd)
 
 void clientAccept(int listenfd, int epoll_fd)
 {
-    struct sockaddr_in clientaddr;
+    sockaddr_in clientaddr{};
     memset(&clientaddr, 0, sizeof(clientaddr));
     socklen_t len = sizeof(clientaddr);
     int client_fd = accept(listenfd, (struct sockaddr *)&clientaddr, &len);
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     // 设置非阻塞
     setnonblocking(listenfd);
 
-    struct sockaddr_in servaddr;
+    sockaddr_in servaddr{};
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = inet_addr(argv[1]);
@@ -97,6 +97,9 @@ int main(int argc, char *argv[])
     epoll_ctl(epoll_fd, EPOLL_CTL_ADD, listenfd, &ev);
 
     epoll_event evs[10];
+
+    std::cout << "epoll服务器启动..." << std::endl;
+
     while (true)
     {
         int infds = epoll_wait(epoll_fd, evs, 10, -1);
