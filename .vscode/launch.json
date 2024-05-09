@@ -26,6 +26,30 @@
             "miDebuggerPath": "/usr/bin/gdb" // GDB 的路径
         },
         {
+            "name": "base02-client",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/base02/base02-client-bin",
+            "args": [
+                "127.0.0.1",
+                "9999"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
             "name": "base02-server",
             "type": "cppdbg",
             "request": "launch",
@@ -58,6 +82,27 @@
                 "127.0.0.1",
                 "9999"
             ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "daemon",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/daemon/daemon-bin",
+            "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
