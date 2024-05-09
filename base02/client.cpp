@@ -12,7 +12,7 @@ constexpr const int MAX_BUFF_SIZE = 4096;
 typedef struct ClientHandlerArgs
 {
     int client_fd;
-    struct sockaddr_in clientaddr;
+    struct sockaddr_in client_addr;
 } ClientHandlerArgs;
 
 void *handlerMessage(void *args)
@@ -23,7 +23,7 @@ void *handlerMessage(void *args)
 
     while (true)
     {
-        int n = read(in->client_fd, buf, MAX_BUFF_SIZE);
+        ssize_t n = read(in->client_fd, buf, MAX_BUFF_SIZE);
         if (n < 0)
         {
             perror("read client_fd failed");
@@ -54,10 +54,10 @@ int main(int argc, char *argv[])
         perror("socket error");
         return -1;
     }
-    struct sockaddr_in *server_addr;
-    server_addr->sin_family = AF_INET;                 // ipv4
-    server_addr->sin_port = htons(atoi(argv[2]));      // 端口号
-    server_addr->sin_addr.s_addr = inet_addr(argv[1]); // ip地址
+    sockaddr_in server_addr{};
+    server_addr.sin_family = AF_INET;                 // ipv4
+    server_addr.sin_port = htons(atoi(argv[2]));      // 端口号
+    server_addr.sin_addr.s_addr = inet_addr(argv[1]); // ip地址
 
     // connect
     if (connect(socket_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
     // 开启接收线程
     pthread_t pt;
-    std::unique_ptr<ClientHandlerArgs> args(new ClientHandlerArgs{socket_fd, *server_addr});
+    std::unique_ptr<ClientHandlerArgs> args(new ClientHandlerArgs{socket_fd, server_addr});
     int ret = pthread_create(&pt, nullptr, handlerMessage, (void *)args.get());
     if (ret < 0)
     {
@@ -80,14 +80,14 @@ int main(int argc, char *argv[])
     while (true)
     {
         std::cout << "请输入发送消息:" << std::endl;
-        char buf[MAX_BUFF_SIZE];
+        std::string buf;
         std::cin >> buf;
-        if (buf == "exit()")
+        if (buf== "bye")
         {
             std::cout << "bye." << std::endl;
             break;
         }
-        write(socket_fd, buf, strlen(buf));
+        write(socket_fd, buf.c_str(), buf.length());
     }
     close(socket_fd);
     return 0;

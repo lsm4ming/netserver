@@ -3,7 +3,7 @@
 #include <netinet/in.h>
 #include <cstring>
 #include <netinet/tcp.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/fcntl.h>
@@ -15,11 +15,11 @@ constexpr const int MAX_BUFF_SIZE = 4096;
 typedef struct ClientHandlerArgs
 {
     int client_fd;
-    struct sockaddr_in clientaddr;
+    struct sockaddr_in client_addr;
 } ClientHandlerArgs;
 
 // 设置非阻塞的IO
-void setnonblocking(int fd)
+void setNonBlocking(int fd)
 {
     fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
 }
@@ -32,13 +32,12 @@ void *clientHandler(void *args)
 
     while (true)
     {
-        int n = read(in->client_fd, buf, MAX_BUFF_SIZE);
-        if (n < 0)
+        ssize_t n = read(in->client_fd, buf, MAX_BUFF_SIZE);
+        if(n <0)
         {
-            perror("read client_fd failed");
+            perror("read发生异常");
             break;
-        }
-        else if (n == 0)
+        } else if (n == 0)
         {
             std::cout << "连接退出" << std::endl;
             break;
@@ -59,40 +58,40 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    int listenfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (listenfd < 0)
+    int listen_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (listen_fd < 0)
     {
         perror("socket() failed");
         return -1;
     }
 
-    // 设置listenfd的属性
+    // 设置listen_fd的属性
     int opt = 1;
-    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, static_cast<socklen_t>(sizeof opt)); // 必须的。
-    setsockopt(listenfd, SOL_SOCKET, TCP_NODELAY, &opt, static_cast<socklen_t>(sizeof opt));  // 必须的。
-    setsockopt(listenfd, SOL_SOCKET, SO_REUSEPORT, &opt, static_cast<socklen_t>(sizeof opt)); // 有用，但是，在Reactor中意义不大。
-    setsockopt(listenfd, SOL_SOCKET, SO_KEEPALIVE, &opt, static_cast<socklen_t>(sizeof opt)); // 可能有用，但是，建议自己做心跳。
+    setsockopt(listen_fd, SOL_SOCKET, SO_REUSEADDR, &opt, static_cast<socklen_t>(sizeof opt)); // 必须的。
+    setsockopt(listen_fd, SOL_SOCKET, TCP_NODELAY, &opt, static_cast<socklen_t>(sizeof opt));  // 必须的。
+    setsockopt(listen_fd, SOL_SOCKET, SO_REUSEPORT, &opt, static_cast<socklen_t>(sizeof opt)); // 有用，但是，在Reactor中意义不大。
+    setsockopt(listen_fd, SOL_SOCKET, SO_KEEPALIVE, &opt, static_cast<socklen_t>(sizeof opt)); // 可能有用，但是，建议自己做心跳。
 
     // 设置非阻塞
-    setnonblocking(listenfd);
+    setNonBlocking(listen_fd);
 
-    struct sockaddr_in servaddr;
-    memset(&servaddr, 0, sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = inet_addr(argv[1]);
-    servaddr.sin_port = htons(atoi(argv[2]));
+    sockaddr_in server_addr{};
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = inet_addr(argv[1]);
+    server_addr.sin_port = htons(atoi(argv[2]));
 
-    if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
+    if (bind(listen_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
     {
         perror("bind() failed");
-        close(listenfd);
+        close(listen_fd);
         return -1;
     }
 
-    if (listen(listenfd, 512) != 0)
+    if (listen(listen_fd, 512) != 0)
     {
         perror("listen() failed");
-        close(listenfd);
+        close(listen_fd);
         return -1;
     }
 
@@ -100,10 +99,10 @@ int main(int argc, char *argv[])
 
     while (true)
     {
-        struct sockaddr_in clientaddr;
-        memset(&clientaddr, 0, sizeof(clientaddr));
-        socklen_t len = sizeof(clientaddr);
-        int client_fd = accept(listenfd, (struct sockaddr *)&clientaddr, &len);
+        sockaddr_in client_addr{};
+        memset(&client_addr, 0, sizeof(client_addr));
+        socklen_t len = sizeof(client_addr);
+        int client_fd = accept(listen_fd, (struct sockaddr *)&client_addr, &len);
         if (client_fd < 0)
         {
             // 休眠500毫秒
@@ -114,7 +113,7 @@ int main(int argc, char *argv[])
         pthread_t pt;
 
         // 创建新线程处理连接
-        std::unique_ptr<ClientHandlerArgs> args(new ClientHandlerArgs{client_fd, clientaddr});
+        std::unique_ptr<ClientHandlerArgs> args(new ClientHandlerArgs{client_fd, client_addr});
         int ret = pthread_create(&pt, nullptr, clientHandler, (void *)args.get());
         if (ret < 0)
         {
