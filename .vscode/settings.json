@@ -1,4 +1,13 @@
 {
+        "cmake.configureOnOpen": true,
+        "editor.minimap.enabled": true,
+        "C_Cpp.autocomplete": "Default",
+        "[cpp]": {
+            "editor.quickSuggestions": true
+        },
+        "[c]": {
+            "editor.quickSuggestions": true
+        },
     "files.associations": {
         "ios": "cpp",
         "cctype": "cpp",
@@ -47,6 +56,8 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "optional": "cpp",
+        "list": "cpp"
     }
 }

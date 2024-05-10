@@ -5,7 +5,7 @@ let delCount = 0;
 
 const ignoreFiles = new Set(['.git', '.vscode', '.gitignore']);
 const removeFileRule = ['cmake_install.cmake', 'CMakeCache.txt', 'CMakeFiles', 'Makefile', 'build'];
-const removeFileSuffix = ['-bin']
+const removeFileSuffix = ['-bin' , ".a"]
 
 const clean = (dirPath) => {
     // 读取目录中的所有文件和子目录
