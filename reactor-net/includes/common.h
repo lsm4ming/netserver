@@ -5,8 +5,13 @@
 #include <vector>
 #include <list>
 
+constexpr const int OK = 1;
 // 创建socket fd失败
 constexpr const int ERROR_CREATE_SOCKET_FD = -1001;
+// bind fd失败
+constexpr const int ERROR_BIND_SOCKET = -1002;
+// listen fd失败
+constexpr const int ERROR_LISTEN_SOCKET = -1003;
 
 using String = std::string;
 

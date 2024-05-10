@@ -17,8 +17,8 @@ public:
     void setReusePort(bool on = false);
     void setTcpNodelay(bool on = false);
     void setKeepalive(bool on = false);
-    void bind(const InetAddress &server_addr);
-    void listen(int n = 128);
+    int bind(const InetAddress &server_addr);
+    int listen(int n = 128);
     int accept(InetAddress &client_addr);
     static int createNonBlocking();
 };
