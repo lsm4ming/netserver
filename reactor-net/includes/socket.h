@@ -2,6 +2,7 @@
 
 #include "common.h"
 #include "inet_address.h"
+#include <fcntl.h>
 
 class Socket
 {
@@ -21,4 +22,5 @@ public:
     int listen(int n = 128);
     int accept(InetAddress &client_addr);
     static int createNonBlocking();
+    static void setNonBlocking(int fd);
 };

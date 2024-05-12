@@ -73,3 +73,8 @@ int Socket::createNonBlocking()
     }
     return listenfd;
 }
+
+void Socket::setNonBlocking(int fd)
+{
+    fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
+}

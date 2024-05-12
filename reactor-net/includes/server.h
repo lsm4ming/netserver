@@ -5,7 +5,6 @@
 #include "socket.h"
 #include "handler.h"
 #include <sys/epoll.h>
-#include <fcntl.h>
 
 #include <utility>
 

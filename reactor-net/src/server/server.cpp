@@ -69,7 +69,7 @@ void ReactorServer::start()
                 socklen_t len = sizeof(client_addr);
                 int client_fd = accept(listen_fd, (struct sockaddr *) &client_addr, &len);
                 // 设置非阻塞
-                fcntl(client_fd, F_SETFL, fcntl(client_fd, F_GETFL) | O_NONBLOCK);
+                Socket::setNonBlocking(client_fd);
                 // 加入epoll事件监听
                 epoll_event ev{};
                 ev.data.fd = client_fd;
