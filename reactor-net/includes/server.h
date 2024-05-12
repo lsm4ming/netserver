@@ -7,6 +7,8 @@
 #include <sys/epoll.h>
 #include <fcntl.h>
 
+#include <utility>
+
 class Server
 {
 public:
@@ -18,7 +20,7 @@ public:
 class ReactorServer : public Server
 {
 public:
-    ReactorServer(const String &host = "127.0.0.1", u_int16_t port = 8080) : host(host), port(port) {}
+    ReactorServer(String host = "127.0.0.1", u_int16_t port = 8080) : host(std::move(host)), port(port) {}
 
     ~ReactorServer() = default;
 
@@ -26,9 +28,9 @@ public:
 
     void setPort(u_int16_t port);
 
-    void start();
+    void start() override;
 
-    void stop();
+    void stop() override;
 
     void setHandler(ServerHandler *handler);
 
@@ -36,5 +38,5 @@ private:
     String host;
     u_int16_t port;
     bool running{true};
-    ServerHandler *handler;
+    ServerHandler *handler{};
 };
