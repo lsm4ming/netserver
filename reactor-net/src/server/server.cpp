@@ -46,6 +46,7 @@ void ReactorServer::start()
 
     epoll_event evs[16];
 
+    std::cout << "reactorServer start..." << std::endl;
     while (true)
     {
         int in_fds = epoll_wait(epoll_fd, evs, 16, -1);
@@ -54,6 +55,7 @@ void ReactorServer::start()
             perror("epoll_wait() fail");
             break;
         }
+        std::cout << "收到" << in_fds << "个事件" << std::endl;
         for (int i = 0; i < in_fds; i++)
         {
             if (evs[i].data.fd == listen_fd) // 客户端连接事件
