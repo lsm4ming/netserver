@@ -2,14 +2,26 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "conan",
+            "type": "shell",
+            "command": "conan install ${workspaceFolder}/conanfile.txt --build=missing",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        },
+        {
             "label": "cmake",
             "type": "shell",
-            "command": "cmake .",
+            "command": "cmake . -B build",
+            "dependsOn":[
+                "conan",
+            ]
         },
         {
             "label": "build",
             "type": "shell",
-            "command": "cmake --build ${workspaceFolder} --target all",
+            "command": "cmake --build ${workspaceFolder}/build --target all",
             "group": {
                 "kind": "build",
                 "isDefault": true

@@ -1,0 +1,7 @@
+[requires]
+cpp-httplib/0.15.3
+[generators]
+CMakeDeps
+CMakeToolchain
+[layout]
+cmake_layout
