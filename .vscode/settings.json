@@ -1,21 +1,22 @@
 {
-        "cmake.configureOnOpen": true,
-        "editor.minimap.enabled": true,
-        "C_Cpp.autocomplete": "Default",
-        "[cpp]": {
-            "editor.quickSuggestions": {
-                "comments": "on",
-                "strings": "on",
-                "other": "on"
-            }
-        },
-        "[c]": {
-            "editor.quickSuggestions": {
-                "comments": "on",
-                "strings": "on",
-                "other": "on"
-            }
-        },
+    "C_Cpp.intelliSenseEngine": "default",
+    "editor.suggest.snippetsPreventQuickSuggestions": true,
+    "editor.minimap.enabled": true,
+    "C_Cpp.autocomplete": "default",
+    "[cpp]": {
+        "editor.quickSuggestions": {
+            "comments": "on",
+            "strings": "on",
+            "other": "on"
+        }
+    },
+    "[c]": {
+        "editor.quickSuggestions": {
+            "comments": "on",
+            "strings": "on",
+            "other": "on"
+        }
+    },
     "files.associations": {
         "ios": "cpp",
         "cctype": "cpp",
@@ -67,5 +68,6 @@
         "typeinfo": "cpp",
         "optional": "cpp",
         "list": "cpp"
-    }
+    },
+    "C_Cpp.intelliSenseEngineFallback": "enabled"
 }

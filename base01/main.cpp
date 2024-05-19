@@ -1,5 +1,11 @@
 #include <iostream>
 
+class Hello
+{
+public:
+    std::string name;
+};
+
 int main()
 {
     int a = 100;
