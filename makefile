@@ -6,3 +6,5 @@ install:
 
 cmake:
 	cd cmake-build-debug && cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+
+# -DCMAKE_TOOLCHAIN_FILE=./cmake-build-debug/conan_toolchain.cmake

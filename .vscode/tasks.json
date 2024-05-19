@@ -8,14 +8,14 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
+            }
         },
         {
             "label": "cmake",
             "type": "shell",
-            "command": "cmake . -B build",
+            "command": "cmake . -B build -DCMAKE_TOOLCHAIN_FILE=${workspaceFolder}/cmake-build-debug/conan_toolchain.cmake",
             "dependsOn":[
-                "conan",
+                "conan"
             ]
         },
         {
@@ -27,11 +27,11 @@
                 "isDefault": true
             },
             "dependsOn":[
-                "cmake",
+                "cmake"
             ]
         },
         {
-			"label": "Build",    // launch.json里面的preLaunchTask
+			"label": "Build",
 			"dependsOn":[
 				"build"
 			]
