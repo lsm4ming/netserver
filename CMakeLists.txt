@@ -5,7 +5,7 @@ project(netserver)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
-set(CONAN_TOOLCHAIN_FILE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/conan_toolchain.cmake)
+set(CONAN_TOOLCHAIN_FILE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug/conan_toolchain.cmake)
 message(STATUS "Using Conan toolchain file: ${CONAN_TOOLCHAIN_FILE_PATH}")
 set(CMAKE_TOOLCHAIN_FILE ${CONAN_TOOLCHAIN_FILE_PATH} CACHE FILEPATH "Conan toolchain file")
 
