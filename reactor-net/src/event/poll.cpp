@@ -2,7 +2,11 @@
 
 Epoll::Epoll()
 {
-    this->epoll_fd = epoll_create1(1);
+    this->epoll_fd = epoll_create1(0);
+    if (this->epoll_fd < 0)
+    {
+        perror("epoll_create1() fail");
+    }
 }
 
 Epoll::~Epoll()

@@ -1,6 +1,6 @@
 add_subdirectory(net)
-add_subdirectory(server)
 add_subdirectory(event)
+add_subdirectory(server)
 
 # file(GLOB_RECURSE ALL_SOURCE "*.cpp" "*.c")
 

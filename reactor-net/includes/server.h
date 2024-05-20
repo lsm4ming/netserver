@@ -4,7 +4,7 @@
 #include "server.h"
 #include "socket.h"
 #include "handler.h"
-#include <sys/epoll.h>
+#include "poll.h"
 
 class Server
 {
