@@ -67,7 +67,9 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "optional": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "fstream": "cpp",
+        "condition_variable": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "enabled"
 }

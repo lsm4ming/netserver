@@ -5,6 +5,7 @@
 #include <vector>
 #include <list>
 #include <iostream>
+#include <cstring>
 
 constexpr const int OK = 1;
 // 创建socket fd失败

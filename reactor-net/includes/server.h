@@ -6,8 +6,6 @@
 #include "handler.h"
 #include <sys/epoll.h>
 
-#include <utility>
-
 class Server
 {
 public:
