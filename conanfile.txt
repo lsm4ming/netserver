@@ -1,5 +1,6 @@
 [requires]
 cpp-httplib/0.15.3
+jsoncons/0.175.0
 [generators]
 CMakeDeps
 CMakeToolchain
