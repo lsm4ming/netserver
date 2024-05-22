@@ -37,53 +37,50 @@ void ReactorServer::start()
     }
 
     Epoll epoll;
-
-    epoll.addFd(listen_fd, EPOLLIN); // listen_fd采用水平触发
-
     std::cout << "reactorServer start..." << std::endl;
     while (true)
     {
-        Vector<epoll_event> list = epoll.loop();
-        if (list.empty())
+        Vector<Channel*> channels = epoll.loop();
+        if (channels.empty())
         {
             continue;
         }
-        std::cout << "收到" << list.size() << "个事件" << std::endl;
-        for (auto &item : list)
+        std::cout << "收到" << channels.size() << "个事件" << std::endl;
+        for (auto &item : channels)
         {
-            if (item.data.fd == listen_fd) // 客户端连接事件
-            {
-                sockaddr_in client_addr{};
-                socklen_t len = sizeof(client_addr);
-                int client_fd = accept(listen_fd, (struct sockaddr *)&client_addr, &len);
-                // 设置非阻塞
-                Socket::setNonBlocking(client_fd);
-                // 加入epoll事件监听
-                epoll.addFd(client_fd, EPOLLIN | EPOLLET);
-                if (this->handler)
-                {
-                    this->handler->onAccept(client_fd, client_addr);
-                }
-            }
-            else
-            {
-                if (item.events & EPOLLRDHUP && this->handler) // 客户端关闭事件，部分系统不支持
-                {
-                    this->handler->onExit(item.data.fd);
-                }
-                else if (item.events & EPOLLIN | EPOLLPRI && this->handler) // 客户端可读事件
-                {
-                    this->handler->onReader(item.data.fd);
-                }
-                else if (item.events & EPOLLOUT && this->handler) // 客户端可写事件
-                {
-                    this->handler->onWrite(item.data.fd);
-                }
-                else if (this->handler) // 错误
-                {
-                    this->handler->onError(item.data.fd);
-                }
-            }
+            // if (item.data.fd == listen_fd) // 客户端连接事件
+            // {
+            //     sockaddr_in client_addr{};
+            //     socklen_t len = sizeof(client_addr);
+            //     int client_fd = accept(listen_fd, (struct sockaddr *)&client_addr, &len);
+            //     // 设置非阻塞
+            //     Socket::setNonBlocking(client_fd);
+            //     // 加入epoll事件监听
+            //     epoll.addFd(client_fd, EPOLLIN | EPOLLET);
+            //     if (this->handler)
+            //     {
+            //         this->handler->onAccept(client_fd, client_addr);
+            //     }
+            // }
+            // else
+            // {
+            //     if (item.events & EPOLLRDHUP && this->handler) // 客户端关闭事件，部分系统不支持
+            //     {
+            //         this->handler->onExit(item.data.fd);
+            //     }
+            //     else if (item.events & EPOLLIN | EPOLLPRI && this->handler) // 客户端可读事件
+            //     {
+            //         this->handler->onReader(item.data.fd);
+            //     }
+            //     else if (item.events & EPOLLOUT && this->handler) // 客户端可写事件
+            //     {
+            //         this->handler->onWrite(item.data.fd);
+            //     }
+            //     else if (this->handler) // 错误
+            //     {
+            //         this->handler->onError(item.data.fd);
+            //     }
+            // }
         }
     }
 }
