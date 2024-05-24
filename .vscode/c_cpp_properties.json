@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "/home/lsm/.conan2/p/cpp-hb43040248388d/p/include",
                 "/home/lsm/.conan2/p/jsonc53f23cdbc722f/p/include",
-                "/home/lsm/.conan2/p/yaml-2096706c6c665/s/src/include"
+                "/home/lsm/.conan2/p/yaml-2096706c6c665/s/src/include",
+                "/home/lsm/.conan2/p/b/redis8c13bb8bfbfc7/p/include"
             ],
             "defines": [],
             "cStandard": "c23",

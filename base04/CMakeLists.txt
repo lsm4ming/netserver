@@ -16,7 +16,11 @@ target_link_libraries(base04-json-bin jsoncons)
 
 add_executable(base04-mysql-bin mysql_client.cpp)
 
+find_package(redis++ REQUIRED)
+
 add_executable(base04-redis-bin redis_client.cpp)
+
+target_link_libraries(base04-redis-bin redis++::redis++_static)
 
 add_executable(base04-mongo-bin mongo_client.cpp)
 
