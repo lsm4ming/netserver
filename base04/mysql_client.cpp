@@ -1,6 +1,7 @@
 #include <iostream>
 #include <mysql.h>
 #include <chrono>
+#include <cstring>
 
 int insertData(MYSQL *conn)
 {

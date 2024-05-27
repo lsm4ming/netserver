@@ -29,3 +29,7 @@ message(STATUS "libmysqlclient库目录: ${libmysqlclient_INCLUDE_DIRS}")
 find_package(cryptopp REQUIRED)
 add_executable(base04-crypt-bin crypt.cpp)
 target_link_libraries(base04-crypt-bin cryptopp::cryptopp)
+
+find_package(protobuf REQUIRED)
+add_executable(base04-protobuf-bin protobuf.cpp demo.pb.cc)
+target_link_libraries(base04-protobuf-bin protobuf::protobuf)
