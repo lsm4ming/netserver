@@ -1,10 +1,13 @@
 #include <iostream>
-#include "demo.pb.h"
+#include "person.pb.h"
 
 using String = std::string;
 
 int main()
 {
+    // 初始化 Protocol Buffers 库
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+
     // 创建一个 Person 对象并设置值
     Person person;
     person.set_name("lsm1998");

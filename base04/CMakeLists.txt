@@ -31,5 +31,11 @@ add_executable(base04-crypt-bin crypt.cpp)
 target_link_libraries(base04-crypt-bin cryptopp::cryptopp)
 
 find_package(protobuf REQUIRED)
-add_executable(base04-protobuf-bin protobuf.cpp demo.pb.cc)
-target_link_libraries(base04-protobuf-bin protobuf::protobuf)
+#find_package(absl REQUIRED)
+add_executable(base04-protobuf-bin protobuf.cpp person.pb.cc person.pb.h)
+target_link_libraries(base04-protobuf-bin protobuf::libprotobuf)
+##target_link_libraries(base04-protobuf-bin PRIVATE protobuf::libprotobuf
+#        absl::log_internal_message
+#        absl::log_internal_check_op
+#        absl::log_internal_proto
+#        absl::status)
