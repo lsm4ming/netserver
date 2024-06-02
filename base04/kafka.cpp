@@ -6,7 +6,7 @@
 #include <chrono>
 #include <librdkafka/rdkafkacpp.h>
 
-constexpr const char *KAFKA_BROKERS = "192.168.239.50:9092";
+constexpr const char *KAFKA_BROKERS = "192.168.239.50:9192,192.168.239.50:9292,192.168.239.50:9392";
 constexpr const char *KAFKA_TOPIC = "test_topic";
 constexpr const char *KAFKA_GROUP = "test_group";
 
@@ -117,7 +117,6 @@ void consume_message(const std::string &brokers, const std::string &topic, const
 
 int main(int argc, char **argv)
 {
-    // docker run -d --name kafka -p 9092:9092 -e ALLOW_PLAINTEXT_LISTENER=yes -e KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true docker.io/bitnami/kafka:3.0.0
     std::string brokers = KAFKA_BROKERS;
     std::string topic = KAFKA_TOPIC;
     std::string group_id = KAFKA_GROUP;
