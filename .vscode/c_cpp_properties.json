@@ -7,6 +7,9 @@
                 "/home/lsm/.conan2/p/cpp-hb43040248388d/p/include",
                 "/home/lsm/.conan2/p/jsonc53f23cdbc722f/p/include",
                 "/home/lsm/.conan2/p/yaml-2096706c6c665/s/src/include",
+                "/home/lsm/.conan2/p/b/redis8c13bb8bfbfc7/p/include",
+                "/home/lsm/.conan2/p/libmy60bc15376c5b1/s/src/include",
+                "/home/lsm/.conan2/p/b/mongo293eb7ea94126/p/include",
                 "/home/lsm/.conan2/p/b/redis8c13bb8bfbfc7/p/include"
             ],
             "defines": [],

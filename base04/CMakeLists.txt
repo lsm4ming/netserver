@@ -12,8 +12,9 @@ find_package(redis++ REQUIRED)
 add_executable(base04-redis-bin redis_client.cpp)
 target_link_libraries(base04-redis-bin redis++::redis++_static)
 
-
+find_package(mongocxx REQUIRED)
 add_executable(base04-mongo-bin mongo_client.cpp)
+target_link_libraries(base04-mongo-bin mongo::mongocxx_static)
 
 find_package(yaml-cpp REQUIRED)
 add_executable(base04-yaml-bin yaml.cpp)

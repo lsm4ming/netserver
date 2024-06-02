@@ -3,6 +3,10 @@
 #include <chrono>
 #include <cstring>
 
+constexpr const char *MYSQL_USER = "root";
+constexpr const char *MYSQL_HOST = "192.168.239.50";
+constexpr const char *MYSQL_PASS = "123456";
+
 int insertData(MYSQL *conn)
 {
     /**
@@ -38,17 +42,17 @@ int insertData(MYSQL *conn)
     std::tm tm_time = *std::localtime(&now_time_t);
 
     bind[0].buffer_type = MYSQL_TYPE_STRING;
-    bind[0].buffer = const_cast<char*>(username.c_str());
+    bind[0].buffer = const_cast<char *>(username.c_str());
     bind[0].buffer_length = username.length();
     bind[0].is_null = nullptr;
 
     bind[1].buffer_type = MYSQL_TYPE_STRING;
-    bind[1].buffer = const_cast<char*>(email.c_str());
+    bind[1].buffer = const_cast<char *>(email.c_str());
     bind[1].buffer_length = email.length();
     bind[1].is_null = nullptr;
 
     bind[2].buffer_type = MYSQL_TYPE_STRING;
-    bind[2].buffer = const_cast<char*>(password.c_str());
+    bind[2].buffer = const_cast<char *>(password.c_str());
     bind[2].buffer_length = password.length();
     bind[2].is_null = nullptr;
 
@@ -92,7 +96,7 @@ int main()
     conn = mysql_init(nullptr);
 
     // 连接数据库
-    if (!mysql_real_connect(conn, "127.0.0.1", "root", "123456", "demo", 0, nullptr, 0))
+    if (!mysql_real_connect(conn, MYSQL_HOST, MYSQL_USER, MYSQL_PASS, "demo", 0, nullptr, 0))
     {
         std::cerr << "Connection error: " << mysql_error(conn) << std::endl;
         return 1;
