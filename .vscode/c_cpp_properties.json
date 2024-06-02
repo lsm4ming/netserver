@@ -11,7 +11,8 @@
                 "/home/lsm/.conan2/p/libmy60bc15376c5b1/s/src/include",
                 "/home/lsm/.conan2/p/b/mongo293eb7ea94126/p/include",
                 "/home/lsm/.conan2/p/b/redis8c13bb8bfbfc7/p/include",
-                "/home/lsm/.conan2/p/b/librdde3637cddff66/p/include"
+                "/home/lsm/.conan2/p/b/librdde3637cddff66/p/include",
+                "/home/lsm/.conan2/p/b/libcu00fb998c978cf/p/include/"
             ],
             "defines": [],
             "cStandard": "c23",
