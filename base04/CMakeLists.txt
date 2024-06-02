@@ -40,3 +40,7 @@ target_link_libraries(base04-protobuf-bin protobuf::libprotobuf)
 #        absl::log_internal_check_op
 #        absl::log_internal_proto
 #        absl::status)
+
+find_package(RdKafka REQUIRED)
+add_executable(base04-kafka-bin kafka.cpp)
+target_link_libraries(base04-kafka-bin RdKafka::rdkafka++)
