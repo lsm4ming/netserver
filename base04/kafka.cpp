@@ -12,6 +12,7 @@ constexpr const char *KAFKA_GROUP = "test_group";
 
 // 信号处理
 static bool run = true;
+
 static void sigterm(int sig)
 {
     run = false;

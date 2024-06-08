@@ -11,8 +11,6 @@
 
 using namespace CryptoPP;
 
-using p = CryptoPP::byte *;
-using cp = const CryptoPP::byte *;
 using String = std::string;
 
 MD5 hash;
@@ -55,6 +53,11 @@ static String aesDecoder(const String &keyStr, const String &cipher)
     StringSource give_me_a_name1(cipher, true, new HexDecoder(new StringSink(digest)));
     StringSource give_me_a_name2(digest, true, new StreamTransformationFilter(decryption, new StringSink(decrypted)));
     return decrypted;
+}
+
+static String rasEncoder(const String &keyStr, const String &plain)
+{
+
 }
 
 int main()

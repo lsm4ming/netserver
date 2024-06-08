@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <netdb.h>
 #include <unistd.h>
+#include <sstream>
 #include "httpresponse.h"
 
 class HttpClient
@@ -17,9 +18,9 @@ private:
     String method;
     Header header;
     Header query;
-    char *body;
-    size_t bodyLength;
-    int socketFd;
+    char *body{};
+    size_t bodyLength{};
+    int socketFd{};
 
 public:
     HttpClient(/* args */) = default;
@@ -54,6 +55,4 @@ private:
     Header parseQuery(const String &queryRaw);
 
     HttpResponse send();
-
-    HttpResponse readResponse();
 };

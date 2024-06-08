@@ -31,8 +31,7 @@ HttpClient *HttpClient::addQuery(const String &key, const Vector<String> &values
     if (val == this->query.end())
     {
         this->setQuery(key, values);
-    }
-    else
+    } else
     {
         val->second.insert(val->second.end(), values.begin(), values.end());
     }
@@ -61,8 +60,7 @@ HttpClient *HttpClient::addHeader(const String &key, const Vector<String> &value
     if (val == this->header.end())
     {
         this->setHeader(key, values);
-    }
-    else
+    } else
     {
         val->second.insert(val->second.end(), values.begin(), values.end());
     }
@@ -112,16 +110,13 @@ HttpResponse HttpClient::doSend(const String &method, const String &url)
             this->path = "/";
         }
 
-        for (auto &item : this->parseQuery(this->queryRaw))
+        for (auto &item: this->parseQuery(this->queryRaw))
         {
             this->addQuery(item.first, item.second);
         }
-        this->send();
+        return this->send();
     }
-    else
-    {
-        std::cout << "The URL is not valid." << std::endl;
-    }
+    std::cout << "The URL is not valid." << std::endl;
     return HttpResponse{};
 }
 
@@ -132,7 +127,7 @@ String HttpClient::host_to_ip(const String &hostname)
     {
         return "";
     }
-    auto **addr_list = (struct in_addr **)he->h_addr_list;
+    auto **addr_list = (struct in_addr **) he->h_addr_list;
     return inet_ntoa(*addr_list[0]);
 }
 
@@ -143,7 +138,7 @@ int HttpClient::http_create_socket(const String &ip)
     sin.sin_family = AF_INET;
     sin.sin_port = htons(80); //
     sin.sin_addr.s_addr = inet_addr(ip.c_str());
-    if (0 != connect(sockfd, (struct sockaddr *)&sin, sizeof(struct sockaddr_in)))
+    if (0 != connect(sockfd, (struct sockaddr *) &sin, sizeof(struct sockaddr_in)))
     {
         return -1;
     }
@@ -201,10 +196,9 @@ HttpResponse HttpClient::send()
 {
     // 组装请求url
     this->rawUrl = assembleUrl();
-    std::cout << "请求url=" << this->rawUrl << std ::endl;
 
     // 将domain转为IP地址
-    String ip = this->host_to_ip(this->domain);
+    String ip = HttpClient::host_to_ip(this->domain);
 
     // 建立TCP连接
     this->socketFd = this->http_create_socket(ip);
@@ -214,7 +208,7 @@ HttpResponse HttpClient::send()
     // 写请求行
     stream << method << EMPTY << path << EMPTY << HTTP_VERSION << WRAP;
     // 写请求头
-    for (auto &item : this->header)
+    for (auto &item: this->header)
     {
         stream << item.first << ": " << joinValues(item.second) << WRAP;
     }
@@ -226,66 +220,9 @@ HttpResponse HttpClient::send()
         write(socketFd, this->body, this->bodyLength);
     }
 
-    return this->readResponse();
-}
-
-HttpResponse HttpClient::readResponse()
-{
-    // 读取回复
-    OsStringStream responseStream;
-    char buffer[BUFFER_SIZE];
-    int bytesReceived;
-    size_t contentLength = 0;
-
-    // 读取响应头
-    String headers;
-    while ((bytesReceived = read(socketFd, buffer, 1)) > 0)
-    {
-        headers.append(buffer, 1);
-        if (buffer[0] == '\n')
-        {
-            // 当读取到两个连续的换行符时表示找到了响应头的结束
-            if (headers.substr(headers.length() - 4) == "\r\n\r\n")
-            {
-                break;
-            }
-        }
-    }
-
-    // 解析响应头
-    std::istringstream headersStream(headers);
-    String headerLine;
-    while (std::getline(headersStream, headerLine) && headerLine != "\r")
-    {
-        if (headerLine.find("Content-Length:") != String::npos)
-        {
-            contentLength = std::stoi(headerLine.substr(16));
-            break;
-        }
-    }
-    responseStream << headers;
-
-    // 读取响应体
-    if (contentLength > 0)
-    {
-        size_t remaining = contentLength;
-        while (remaining > 0 && (bytesReceived = read(socketFd, buffer, std::min(remaining, size_t(BUFFER_SIZE - 1)))) > 0)
-        {
-            buffer[bytesReceived] = '\0';
-            responseStream << buffer;
-            remaining -= bytesReceived;
-        }
-        if (bytesReceived < 0)
-        {
-            perror("recv");
-            close(socketFd);
-            return;
-        }
-    }
-    std::cout << "响应数据=" << responseStream.str() << std::endl;
-    return HttpResponse{
-        
-    };
+    HttpResponse response;
+    response.readResponse(this->socketFd);
+    return response;
 }
 
 String HttpClient::assembleUrl()
@@ -315,7 +252,7 @@ String HttpClient::encodeQueryParameters()
     OsStringStream queryStream;
     for (auto it = query.begin(); it != query.end(); ++it)
     {
-        for (const auto &value : it->second)
+        for (const auto &value: it->second)
         {
             if (it != query.begin() || &value != &it->second.front())
             {
@@ -329,16 +266,18 @@ String HttpClient::encodeQueryParameters()
 
 void HttpClient::set_socket_timeout(int fd, int seconds)
 {
-    struct timeval timeout;
+    struct timeval timeout{};
     timeout.tv_sec = seconds;
     timeout.tv_usec = 0;
-    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
+    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &timeout, sizeof(timeout));
 }
 
 int main()
 {
     HttpClient client;
     auto resp = client.setQuery("name", "lsm")->get("http://www.baidu.com");
-
+    std::cout << "statusCode=" << resp.statusCode() << std::endl;
+    std::cout << "httpStatus=" << resp.httpStatus() << std::endl;
+    std::cout << "body=" << resp.getBody() << std::endl;
     return 0;
 }
