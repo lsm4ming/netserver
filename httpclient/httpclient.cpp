@@ -1,6 +1,14 @@
 #include "httpclient.h"
 #include <iostream>
 
+HttpClient::~HttpClient()
+{
+    if (this->socketFd > 0)
+    {
+        close(this->socketFd);
+    }
+}
+
 HttpClient *HttpClient::setQuery(const String &key, const String &value)
 {
     return this->setQuery(key, Vector<String>{value});
@@ -75,17 +83,17 @@ HttpClient *HttpClient::setTimeout(int seconds)
     return this;
 }
 
-HttpClient *HttpClient::post(const String &url)
+HttpResponse HttpClient::post(const String &url)
 {
     return this->doSend("POST", url);
 }
 
-HttpClient *HttpClient::get(const String &url)
+HttpResponse HttpClient::get(const String &url)
 {
     return this->doSend("GET", url);
 }
 
-HttpClient *HttpClient::doSend(const String &method, const String &url)
+HttpResponse HttpClient::doSend(const String &method, const String &url)
 {
     this->method = method;
     this->rawUrl = url;
@@ -114,7 +122,7 @@ HttpClient *HttpClient::doSend(const String &method, const String &url)
     {
         std::cout << "The URL is not valid." << std::endl;
     }
-    return this;
+    return HttpResponse{};
 }
 
 String HttpClient::host_to_ip(const String &hostname)
@@ -189,7 +197,7 @@ String HttpClient::joinValues(const Vector<String> &values)
     return result.str();
 }
 
-void HttpClient::send()
+HttpResponse HttpClient::send()
 {
     // 组装请求url
     this->rawUrl = assembleUrl();
@@ -218,6 +226,11 @@ void HttpClient::send()
         write(socketFd, this->body, this->bodyLength);
     }
 
+    return this->readResponse();
+}
+
+HttpResponse HttpClient::readResponse()
+{
     // 读取回复
     OsStringStream responseStream;
     char buffer[BUFFER_SIZE];
@@ -256,7 +269,7 @@ void HttpClient::send()
     if (contentLength > 0)
     {
         size_t remaining = contentLength;
-        while (remaining > 0 && (bytesReceived = read(socketFd, buffer, std::min(remaining, size_t(BUFFER_SIZE)))) > 0)
+        while (remaining > 0 && (bytesReceived = read(socketFd, buffer, std::min(remaining, size_t(BUFFER_SIZE - 1)))) > 0)
         {
             buffer[bytesReceived] = '\0';
             responseStream << buffer;
@@ -266,14 +279,13 @@ void HttpClient::send()
         {
             perror("recv");
             close(socketFd);
-            exit(1);
+            return;
         }
     }
-
     std::cout << "响应数据=" << responseStream.str() << std::endl;
-
-    // 关闭连接
-    close(socketFd);
+    return HttpResponse{
+        
+    };
 }
 
 String HttpClient::assembleUrl()
@@ -326,6 +338,7 @@ void HttpClient::set_socket_timeout(int fd, int seconds)
 int main()
 {
     HttpClient client;
-    auto a = client.setQuery("name", "lsm")->get("http://www.baidu.com");
+    auto resp = client.setQuery("name", "lsm")->get("http://www.baidu.com");
+
     return 0;
 }

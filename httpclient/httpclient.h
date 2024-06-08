@@ -1,27 +1,9 @@
 #pragma once
 
-#include <string>
-#include <arpa/inet.h>
 #include <fcntl.h>
 #include <netdb.h>
-#include <map>
-#include <vector>
-#include <regex>
 #include <unistd.h>
-
-using String = std::string;
-using OsStringStream = std::ostringstream;
-template <typename T>
-using Vector = std::vector<T>;
-using Header = std::map<String, Vector<String>>;
-
-constexpr const int BUFFER_SIZE = 4096;
-constexpr const char *HTTP_VERSION = "HTTP/1.1";
-constexpr const char *CONNETION_TYPE = "Connection: close\r\n";
-constexpr const char *WRAP = "\r\n";
-constexpr const char *EMPTY = " ";
-
-std::regex url_regex(R"((https?)://([^/\r\n]+)(/[^\r\n?]*)?(\?[^#\r\n]*)?)");
+#include "httpresponse.h"
 
 class HttpClient
 {
@@ -41,7 +23,7 @@ private:
 
 public:
     HttpClient(/* args */) = default;
-    ~HttpClient() = default;
+    ~HttpClient();
     HttpClient *setQuery(const String &key, const String &value);
     HttpClient *addQuery(const String &key, const String &value);
     HttpClient *setQuery(const String &key, const Vector<String> &values);
@@ -52,9 +34,9 @@ public:
     HttpClient *addHeader(const String &key, const Vector<String> &values);
     HttpClient *setBody(char *body, size_t bodyLength);
     HttpClient *setTimeout(int seconds);
-    HttpClient *post(const String &url);
-    HttpClient *get(const String &url);
-    HttpClient *doSend(const String &method, const String &url);
+    HttpResponse post(const String &url);
+    HttpResponse get(const String &url);
+    HttpResponse doSend(const String &method, const String &url);
 
 private:
     static String host_to_ip(const String &hostname);
@@ -63,13 +45,15 @@ private:
 
     static void set_socket_timeout(int fd, int seconds);
 
+    String assembleUrl();
+
+    String encodeQueryParameters();
+
     int http_create_socket(const String &ip);
 
     Header parseQuery(const String &queryRaw);
 
-    void send();
+    HttpResponse send();
 
-    String assembleUrl();
-
-    String encodeQueryParameters();
+    HttpResponse readResponse();
 };
