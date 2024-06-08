@@ -37,13 +37,21 @@ private:
     Header query;
     char *body;
     size_t bodyLength;
+    int socketFd;
 
 public:
     HttpClient(/* args */) = default;
     ~HttpClient() = default;
     HttpClient *setQuery(const String &key, const String &value);
     HttpClient *addQuery(const String &key, const String &value);
+    HttpClient *setQuery(const String &key, const Vector<String> &values);
+    HttpClient *addQuery(const String &key, const Vector<String> &values);
+    HttpClient *setHeader(const String &key, const String &value);
+    HttpClient *addHeader(const String &key, const String &value);
+    HttpClient *setHeader(const String &key, const Vector<String> &values);
+    HttpClient *addHeader(const String &key, const Vector<String> &values);
     HttpClient *setBody(char *body, size_t bodyLength);
+    HttpClient *setTimeout(int seconds);
     HttpClient *post(const String &url);
     HttpClient *get(const String &url);
     HttpClient *doSend(const String &method, const String &url);

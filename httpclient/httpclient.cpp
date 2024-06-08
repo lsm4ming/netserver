@@ -3,13 +3,61 @@
 
 HttpClient *HttpClient::setQuery(const String &key, const String &value)
 {
-    this->query[key] = Vector<String>{value};
-    return this;
+    return this->setQuery(key, Vector<String>{value});
 }
 
 HttpClient *HttpClient::addQuery(const String &key, const String &value)
 {
-    // auto val = this->query.find(key);
+    return this->addQuery(key, Vector<String>{value});
+}
+
+HttpClient *HttpClient::setQuery(const String &key, const Vector<String> &values)
+{
+    this->query[key] = values;
+    return this;
+}
+
+HttpClient *HttpClient::addQuery(const String &key, const Vector<String> &values)
+{
+    auto val = this->query.find(key);
+    if (val == this->query.end())
+    {
+        this->setQuery(key, values);
+    }
+    else
+    {
+        val->second.insert(val->second.end(), values.begin(), values.end());
+    }
+    return this;
+}
+
+HttpClient *HttpClient::setHeader(const String &key, const String &value)
+{
+    return this->setHeader(key, Vector<String>{value});
+}
+
+HttpClient *HttpClient::addHeader(const String &key, const String &value)
+{
+    return this->addHeader(key, Vector<String>{value});
+}
+
+HttpClient *HttpClient::setHeader(const String &key, const Vector<String> &values)
+{
+    this->header[key] = values;
+    return this;
+}
+
+HttpClient *HttpClient::addHeader(const String &key, const Vector<String> &values)
+{
+    auto val = this->header.find(key);
+    if (val == this->header.end())
+    {
+        this->setHeader(key, values);
+    }
+    else
+    {
+        val->second.insert(val->second.end(), values.begin(), values.end());
+    }
     return this;
 }
 
@@ -17,6 +65,13 @@ HttpClient *HttpClient::setBody(char *body, size_t bodyLength)
 {
     this->body = body;
     this->bodyLength = bodyLength;
+    this->setHeader("Content-Length", std::to_string(bodyLength));
+    return this;
+}
+
+HttpClient *HttpClient::setTimeout(int seconds)
+{
+    set_socket_timeout(this->socketFd, seconds);
     return this;
 }
 
@@ -49,7 +104,10 @@ HttpClient *HttpClient::doSend(const String &method, const String &url)
             this->path = "/";
         }
 
-        this->query = this->parseQuery(this->queryRaw);
+        for (auto &item : this->parseQuery(this->queryRaw))
+        {
+            this->addQuery(item.first, item.second);
+        }
         this->send();
     }
     else
@@ -88,17 +146,17 @@ int HttpClient::http_create_socket(const String &ip)
 Header HttpClient::parseQuery(const String &queryRaw)
 {
     Header queryMap;
-    std::string::size_type start = 0;
-    std::string::size_type end = queryRaw.find('&');
+    String::size_type start = 0;
+    String::size_type end = queryRaw.find('&');
 
-    while (end != std::string::npos)
+    while (end != String::npos)
     {
-        std::string pair = queryRaw.substr(start, end - start);
-        std::string::size_type delimiter = pair.find('=');
-        if (delimiter != std::string::npos)
+        String pair = queryRaw.substr(start, end - start);
+        String::size_type delimiter = pair.find('=');
+        if (delimiter != String::npos)
         {
-            std::string key = pair.substr(0, delimiter);
-            std::string value = pair.substr(delimiter + 1);
+            String key = pair.substr(0, delimiter);
+            String value = pair.substr(delimiter + 1);
             queryMap[key].push_back(value);
         }
         start = end + 1;
@@ -106,12 +164,12 @@ Header HttpClient::parseQuery(const String &queryRaw)
     }
 
     // 处理最后一对键值（或只有一对时）
-    std::string pair = queryRaw.substr(start);
-    std::string::size_type delimiter = pair.find('=');
-    if (delimiter != std::string::npos)
+    String pair = queryRaw.substr(start);
+    String::size_type delimiter = pair.find('=');
+    if (delimiter != String::npos)
     {
-        std::string key = pair.substr(0, delimiter);
-        std::string value = pair.substr(delimiter + 1);
+        String key = pair.substr(0, delimiter);
+        String value = pair.substr(delimiter + 1);
         queryMap[key].push_back(value);
     }
     return queryMap;
@@ -141,8 +199,7 @@ void HttpClient::send()
     String ip = this->host_to_ip(this->domain);
 
     // 建立TCP连接
-    int socketFd = this->http_create_socket(ip);
-    // set_socket_timeout(socketFd, 10);
+    this->socketFd = this->http_create_socket(ip);
 
     OsStringStream stream;
 
@@ -184,10 +241,10 @@ void HttpClient::send()
 
     // 解析响应头
     std::istringstream headersStream(headers);
-    std::string headerLine;
+    String headerLine;
     while (std::getline(headersStream, headerLine) && headerLine != "\r")
     {
-        if (headerLine.find("Content-Length:") != std::string::npos)
+        if (headerLine.find("Content-Length:") != String::npos)
         {
             contentLength = std::stoi(headerLine.substr(16));
             break;
@@ -198,15 +255,12 @@ void HttpClient::send()
     // 读取响应体
     if (contentLength > 0)
     {
-        std::cout << "contentLength=" << contentLength << std::endl;
         size_t remaining = contentLength;
         while (remaining > 0 && (bytesReceived = read(socketFd, buffer, std::min(remaining, size_t(BUFFER_SIZE)))) > 0)
         {
-            std::cout << "contentLength读取一次" << std::endl;
             buffer[bytesReceived] = '\0';
             responseStream << buffer;
             remaining -= bytesReceived;
-            std::cout << "remaining=" << remaining << ",bytesReceived=" << bytesReceived << std::endl;
         }
         if (bytesReceived < 0)
         {
@@ -272,6 +326,6 @@ void HttpClient::set_socket_timeout(int fd, int seconds)
 int main()
 {
     HttpClient client;
-    auto a = client.get("http://www.baidu.com");
+    auto a = client.setQuery("name", "lsm")->get("http://www.baidu.com");
     return 0;
 }
