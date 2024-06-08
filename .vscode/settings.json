@@ -90,7 +90,9 @@
         "thread": "cpp",
         "valarray": "cpp",
         "variant": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "unistd.h": "c",
+        "any": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "enabled"
 }

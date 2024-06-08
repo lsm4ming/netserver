@@ -1,0 +1,1 @@
+add_executable(httpclient-bin httpclient.cpp httpclient.h)
