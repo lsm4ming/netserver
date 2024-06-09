@@ -1,1 +1,1 @@
-add_executable(httpclient-bin httpclient.cpp httpclient.h httpresponse.cpp httpresponse.h httprequest.cpp httprequest.h)
+add_executable(httpclient-bin main.cpp httpclient.cpp httpclient.h httpresponse.cpp httpresponse.h httprequest.cpp httprequest.h)

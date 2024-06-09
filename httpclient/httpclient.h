@@ -1,30 +1,16 @@
 #pragma once
 
-#include <fcntl.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <sstream>
 #include "httpresponse.h"
+#include "httprequest.h"
 
 class HttpClient
 {
 private:
-    // 协议
-    String protocol;
-    String domain;
-    String path;
-    String queryRaw;
-    String rawUrl;
-    String method;
-    Header header;
-    Header query;
-    char *body{};
-    size_t bodyLength{};
-    int socketFd{};
+    HttpRequest request;
 
 public:
-    HttpClient(/* args */) = default;
-    ~HttpClient();
+    explicit HttpClient() = default;
+    ~HttpClient() = default;
     HttpClient *setQuery(const String &key, const String &value);
     HttpClient *addQuery(const String &key, const String &value);
     HttpClient *setQuery(const String &key, const Vector<String> &values);
@@ -33,26 +19,10 @@ public:
     HttpClient *addHeader(const String &key, const String &value);
     HttpClient *setHeader(const String &key, const Vector<String> &values);
     HttpClient *addHeader(const String &key, const Vector<String> &values);
-    HttpClient *setBody(char *body, size_t bodyLength);
+    HttpClient *setBody(char *body, size_t length);
     HttpClient *setTimeout(int seconds);
     HttpResponse post(const String &url);
     HttpResponse get(const String &url);
     HttpResponse doSend(const String &method, const String &url);
-
-private:
-    static String host_to_ip(const String &hostname);
-
-    static String joinValues(const Vector<String> &values);
-
-    static void set_socket_timeout(int fd, int seconds);
-
-    String assembleUrl();
-
-    String encodeQueryParameters();
-
-    int http_create_socket(const String &ip);
-
-    Header parseQuery(const String &queryRaw);
-
-    HttpResponse send();
+    HttpResponse doSend(const HttpRequest &request);
 };
