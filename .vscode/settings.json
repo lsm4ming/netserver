@@ -92,7 +92,9 @@
         "variant": "cpp",
         "*.inc": "cpp",
         "unistd.h": "c",
-        "any": "cpp"
+        "any": "cpp",
+        "ranges": "cpp",
+        "stdio.h": "c"
     },
     "C_Cpp.intelliSenseEngineFallback": "enabled"
 }

@@ -1,0 +1,1 @@
+add_executable(dns-bin main.cpp dns.cpp dns.h)
