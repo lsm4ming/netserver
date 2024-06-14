@@ -9,8 +9,10 @@ class Percentile
 {
 public:
   Percentile() = default;
+
   Percentile(size_t maxStatDataLen) : max_stat_data_len_(maxStatDataLen) {}
-  void Stat(std::string key, int64_t value)
+
+  void Stat(const std::string& key, int64_t value)
   {
     auto iter = origin_stat_data_.find(key);
     if (iter == origin_stat_data_.end())
@@ -28,7 +30,8 @@ public:
     iter->second[origin_stat_data_index_[key]] = value;                                     // 循环数组
     origin_stat_data_index_[key] = (origin_stat_data_index_[key] + 1) % max_stat_data_len_; // 更新下标
   }
-  bool GetPercentile(std::string key, double pct, double &pctValue)
+
+  bool GetPercentile(const std::string& key, double pct, double &pctValue)
   {
     auto iter = origin_stat_data_.find(key);
     if (iter == origin_stat_data_.end())
@@ -42,7 +45,7 @@ public:
     std::vector<int64_t> temp = iter->second;
     std::sort(temp.begin(), temp.end());
     double x = (temp.size() - 1) * pct;
-    int32_t i = (int32_t)x;
+    auto i = (int32_t)x;
     double j = x - i;
     pctValue = (1 - j) * temp[i] + j * temp[i + 1];
     return true;

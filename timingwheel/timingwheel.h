@@ -7,19 +7,25 @@
 #include <condition_variable>
 #include <list>
 
-template <typename T>
-concept TaskJob = requires(T job) {
+template<typename T>
+concept TaskJob =
+requires(T job) {
     { job() } -> std::same_as<void>;
+} ||
+requires(T job) {
     { job.run() } -> std::same_as<void>;
+} ||
+requires(T job) {
     { job.doWork() } -> std::same_as<void>;
 };
+
 class TimingWheel
 {
 private:
-    int slots_;
-    int interval_;
-    int current_slot_;
-    bool running_;
+    int slots_{};
+    int interval_{};
+    int current_slot_{};
+    bool running_{};
     std::thread worker_;
     std::mutex mutex_;
     std::condition_variable cv_;
@@ -27,11 +33,13 @@ private:
 
 public:
     TimingWheel() = default;
+
     ~TimingWheel() = default;
 
-    template <TaskJob T>
-    void addTaskJob(const T &job, int delay)
+    template<TaskJob T>
+    void addTaskJob(const T job, int delay)
     {
+
     }
 
 private:
