@@ -50,7 +50,7 @@ private:
     std::vector<std::list<T>> wheel_;
 
 public:
-    TimingWheel(int slots = 16, int interval = 1) : slots_(slots), interval_(interval)
+    explicit TimingWheel(int slots = 16, int interval = 1) : slots_(slots), interval_(interval)
     {
         for (size_t i = 0; i < this->slots_; i++)
         {
