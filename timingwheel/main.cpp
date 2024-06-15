@@ -3,12 +3,16 @@
 #include <variant>
 #include "timingwheel.h"
 
-void hello(){}
+void hello()
+{
+    std::cout << "hello" << std::endl;
+}
 
 int main()
 {
-    TimingWheel wheel;
-    wheel.addTaskJob(hello , 1);
+    TimingWheel<std::function<void()>> wheel;
+    wheel.start();
+    wheel.addTaskJob(hello, 1);
 
     std::variant<int> v_int;
     std::optional<int> optionalVal(100);
@@ -27,5 +31,7 @@ int main()
                                       { return n < 100000; });
     auto t = res.begin();
     std::cout << *t << std::endl;
+
+    sleep(3);
     return 0;
 }

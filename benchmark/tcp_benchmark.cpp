@@ -179,7 +179,7 @@ void UpdateFinalStat(Stat stat)
 int main(int argc, char *argv[])
 {
   commons::sayHello("lsm");
-  
+
   if (argc != 5)
   {
     std::cout << "invalid input" << std::endl;

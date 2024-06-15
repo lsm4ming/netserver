@@ -1,1 +1,1 @@
-add_executable(timingwheel-bin main.cpp timingwheel.h timingwheel.cpp)
+add_executable(timingwheel-bin main.cpp timingwheel.h)
